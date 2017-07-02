@@ -1,16 +1,16 @@
-let a, b, c, center, radius, ccw;
+let a, b, c, center, radius, ccwMode;
 
 function setup() {
 	createCanvas(windowWidth, windowHeight);
 	let button = createButton ("newTriangle");
 	button.mousePressed(randomPoints);
-	ccw = true;
+	ccwMode = true;
 	let orientation = createButton("change to CW");
 	orientation.mousePressed(
 		function () {
-			if (ccw) orientation.html("change to CCW");
+			if (ccwMode) orientation.html("change to CCW");
 			else orientation.html("change to CW");
-			ccw = !ccw;
+			ccwMode = !ccwMode;
 			[b, c] = [c, b];
 		}
 	);
@@ -24,9 +24,9 @@ function draw() {
 	stroke(0);
 	noFill();
 	ellipse(...center, 2*radius);
-	let v = volume(...a, ...b, ...c, mouseX, mouseY)
-	if (v < 0) fill(255,0,0);
-	else if (v > 0) fill(0,255,0);
+	let v = inCircle(...a, ...b, ...c, mouseX, mouseY)
+	if (v > 0) fill(255,0,0);
+	else if (v < 0) fill(0,255,0);
 	else fill(0,0,255);
 	triangle(...a, ...b, ...c);
 
@@ -40,11 +40,25 @@ function windowResized() {
 	randomPoints();
 }
 
-function area (ax, ay, bx, by, cx, cy) {
+/*
+return:
+	0 if a, b and c are alined,
+	> 0 if ccw
+	< 0 if cw
+*/
+
+function ccw (ax, ay, bx, by, cx, cy) {
 	return (bx - ax)*(cy - ay)-(cx - ax)*(by - ay);
 }
 
-function volume (ax, ay, bx, by, cx, cy, dx, dy) {
+
+/*
+       |   0 if d is on      |
+return | > 0 if d is inside  | the circumcircle of a, b, c
+       | < 0 if d is outside |
+
+*/
+function inCircle (ax, ay, bx, by, cx, cy, dx, dy) {
 	let ax_ = ax-dx;
 	let ay_ = ay-dy;
 	let bx_ = bx-dx;
@@ -68,8 +82,8 @@ function randomPoints () {
 	a = [floor(random(0, width)), floor(random(0, height))];
 	b = [floor(random(0, width)), floor(random(0, height))];
 	c = [floor(random(0, width)), floor(random(0, height))];
-	let sign = area(...a, ...b, ...c);
-	if ((sign > 0 && ccw) || (sign < 0 && !ccw)) [b, c] = [c, b];
+	let sign = ccw(...a, ...b, ...c);
+	if ((sign < 0 && ccwMode) || (sign > 0 && !ccwMode)) [b, c] = [c, b];
 	[radius, ...center] = circumscribed(...a, ...b, ...c);
 }
 
