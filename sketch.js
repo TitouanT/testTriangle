@@ -20,24 +20,35 @@ function setup() {
 }
 
 function draw() {
+	let center_ = changeOrigin(...center);
+	let a_ = changeOrigin(...a);
+	let b_ = changeOrigin(...b);
+	let c_ = changeOrigin(...c);
+	let m = changeOrigin(mouseX, mouseY);
+
 	background(51);
 	stroke(0);
 	noFill();
-	ellipse(...center, 2*radius);
-	let v = inCircle(...a, ...b, ...c, mouseX, mouseY)
+	ellipse(...changeOrigin(...center), 2*radius);
+	let v = inCircle(...a, ...b, ...c, ...m)
 	if (v > 0) fill(255,0,0);
 	else if (v < 0) fill(0,255,0);
 	else fill(0,0,255);
-	triangle(...a, ...b, ...c);
+	triangle(...a_, ...b_, ...c_);
 
-	dispPoint(a, "A");
-	dispPoint(b, "B");
-	dispPoint(c, "C");
+	dispPoint(a_, "A");
+	dispPoint(b_, "B");
+	dispPoint(c_, "C");
 }
 
 function windowResized() {
 	resizeCanvas(windowWidth, windowHeight);
 	randomPoints();
+}
+
+function changeOrigin (x, y) {
+	y = map(y, 0, height, height, 0);
+	return [x, y];
 }
 
 /*
@@ -88,7 +99,7 @@ function randomPoints () {
 }
 
 function dispPoint([x, y], name) {
-	let [mx, my] = center;
+	let [mx, my] = changeOrigin(...center);
 	let h = textSize();
 	let w = textWidth(name);
 	fill(0);
