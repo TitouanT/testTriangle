@@ -3,6 +3,7 @@ let a, b, c, center, radius, ccwMode;
 function setup() {
 	createCanvas(windowWidth, windowHeight);
 	let button = createButton ("newTriangle");
+	let legend = createP("red: the determinent is positive</br>green: the determinent is negative</br>blue: the determinant is null");
 	button.mousePressed(randomPoints);
 	ccwMode = true;
 	let orientation = createButton("change to CW");
@@ -14,8 +15,9 @@ function setup() {
 			[b, c] = [c, b];
 		}
 	);
-	button.position (0, 0);
-	orientation.position (0, button.y + button.height);
+	button.position (5, 5);
+	orientation.position (5, button.y + button.height);
+	legend.position (5, orientation.y + orientation.height);
 	randomPoints();
 }
 
