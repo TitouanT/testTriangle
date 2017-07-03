@@ -4,6 +4,7 @@ function setup() {
 	createCanvas(windowWidth, windowHeight);
 	let button = createButton ("newTriangle");
 	let legend = createP("red: the determinent is positive</br>green: the determinent is negative</br>blue: the determinant is null");
+	legend.style("font-weight", "bold");
 	button.mousePressed(randomPoints);
 	ccwMode = true;
 	let orientation = createButton("change to CW");
